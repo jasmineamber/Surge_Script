@@ -1,6 +1,8 @@
 const key = "hifini_cookies";
 if ($request.method == "POST") {
-    $persistentStore.write(key, $response.headers["Set-Cookie"]);
-    $notification.post("title", $persistentStore.read(key));
+    let set_cookie = $response.headers[`set-cookie`]
+    let bbs_token = set_cookie.split(/[=; ]/)[1]
+    let cookies = `${$request.headers["cookie"]}; bbs_token=${bbs_token}`
+    $persistentStore.write(cookies, key);
 }
 $done({});
