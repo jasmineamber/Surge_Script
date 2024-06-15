@@ -1,9 +1,14 @@
 const jobName = "hifini.com 签到"
 const cookie = $persistentStore.read("hifini_cookies")
+const notifyUrl = $persistentStore.read("BarkServer")
 const recentSignDate = $persistentStore.read("hifiniDailyBonusRecentSignDate")
 const today = new Date()
 const month = today.getMonth() + 1
 const signDate = `${today.getFullYear()}${month}${today.getDate()}`
+
+function SendNotify(title, message) {
+    $httpClient.get(`${notifyUrl}/${title}/${message}`)
+}
 
 // 获取 sign
 function hifiniGetSign() {
@@ -40,6 +45,7 @@ function hifiniGetSign() {
 
 // 签到
 function hifiniSign(sign) {
+    let subTitle = ""
     if (signDate !== recentSignDate) {
         console.log("本机今天尚未签到，开始签到请求")
         const request = {
@@ -65,48 +71,34 @@ function hifiniSign(sign) {
             if (response.status == 200) {
                 if (data == null) {
                     console.log("请求成功，返回空")
-                    const title = jobName
-                    const subTitle = "请求成功，返回空，检查下"
-                    $notification.post(title, subTitle, "")
+                    subTitle = "请求成功，返回空，检查下"
                 } else {
                     if (JSON.parse(data).code == 0) {
-                        const title = jobName
-                        const subTitle = "签到成功"
                         const detail = JSON.parse(data).message
                         console.log(detail)
                         $persistentStore.write(signDate, "hifiniDailyBonusRecentSignDate")
-                        $notification.post(title, subTitle, detail)
+                        subTitle = `签到成功: ${detail}`
                     } else if (JSON.parse(data).code == -1) {
-                        const title = jobName
-                        const subTitle = "签到跳过"
                         const detail = JSON.parse(data).message
                         console.log(detail)
+                        subTitle = `签到跳过: ${detail}`
                         $persistentStore.write(signDate, "hifiniDailyBonusRecentSignDate")
-                        $notification.post(title, subTitle, detail)
                     } else {
-                        const title = jobName
-                        const subTitle = "签到失败"
                         console.log(detail)
                         const detail = `error: ${error}, response: ${response}, data: ${data}`
-                        $notification.post(title, subTitle, detail)
+                        subTitle = `签到失败: ${detail}`
                     }
                 }
             } else {
                 console.log(`请求失败，返回码${response.status}`)
-                const title = jobName
-                const subTitle = `请求失败，返回码${response.status}`
-                $notification.post(title, subTitle, "")
+                subTitle = `请求失败，返回码${response.status}`
             }
-            $done()
         })
     } else {
         console.log("今天已经签过")
-        const title = jobName
-        const subTitle = "签到跳过"
-        const detail = "今天已经签过啦！"
-        $notification.post(title, subTitle, detail)
-        $done()
+        subTitle = "今天已经签过啦"
     }
+    SendNotify(jobName, subTitle)
 }
 
 hifiniGetSign().then(sign => {
