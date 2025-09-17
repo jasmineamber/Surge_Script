@@ -16,7 +16,7 @@ function SendNotify(title, message) {
 }
 
 // 签到
-function hifiniSign(sign) {
+function hifiniSign() {
   return new Promise((resolve) => {
     if (signDate !== recentSignDate) {
       console.log("本机今天尚未签到，开始签到请求");
@@ -80,7 +80,7 @@ function hifiniSign(sign) {
   });
 }
 
-hifiniSign(sign).then((message) => {
+hifiniSign().then((message) => {
   SendNotify(jobName, message);
   $done();
 });
