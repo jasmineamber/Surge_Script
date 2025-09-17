@@ -15,40 +15,6 @@ function SendNotify(title, message) {
   );
 }
 
-// 获取 sign
-function hifiniGetSign() {
-  return new Promise((resolve) => {
-    console.log("获取签到的 sign");
-    // 获取签到的 sign
-    const request = {
-      url: "https://www.hifiti.com/",
-      headers: {
-        Cookie: cookie,
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      },
-    };
-    $httpClient.get(request, (error, response, data) => {
-      console.log("发送请求");
-      if (response.status == 200) {
-        var regex = /var sign = \"(\w+)";/;
-        var match = regex.exec(data);
-        if (match !== null) {
-          var sign = match[1];
-          console.log(`已取得 sign=${sign}`);
-          resolve(sign);
-        } else {
-          console.log(`未通过正则表达式${regex}找到匹配的 sign`);
-          reject(`未通过正则表达式${regex}找到匹配的 sign`);
-        }
-      } else {
-        console.log(`获取 sign 失败，返回码${response.status}`);
-        reject(`获取 sign 失败，返回码${response.status}`);
-      }
-    });
-  });
-}
-
 // 签到
 function hifiniSign(sign) {
   return new Promise((resolve) => {
