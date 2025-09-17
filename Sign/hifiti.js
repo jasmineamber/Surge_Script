@@ -72,7 +72,6 @@ function hifiniSign(sign) {
           "User-Agent":
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         },
-        body: `sign=${sign}`,
       };
       $httpClient.post(request, (error, response, data) => {
         console.log("发送签到请求");
@@ -115,9 +114,7 @@ function hifiniSign(sign) {
   });
 }
 
-hifiniGetSign().then((sign) => {
-  hifiniSign(sign).then((message) => {
-    SendNotify(jobName, message);
-    $done();
-  });
+hifiniSign(sign).then((message) => {
+  SendNotify(jobName, message);
+  $done();
 });
