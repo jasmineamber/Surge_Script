@@ -21,7 +21,7 @@ function hifiniGetSign() {
     console.log("获取签到的 sign");
     // 获取签到的 sign
     const request = {
-      url: "https://www.hifini.com/",
+      url: "https://www.hifiti.com/",
       headers: {
         Cookie: cookie,
         "User-Agent":
@@ -55,13 +55,13 @@ function hifiniSign(sign) {
     if (signDate !== recentSignDate) {
       console.log("本机今天尚未签到，开始签到请求");
       const request = {
-        url: "https://www.hifini.com/sg_sign.htm",
+        url: "https://www.hifiti.com/sg_sign.htm",
         headers: {
           "Accept-Language": "zh-Hans,zh-CN;q=0.9,zh;q=0.8",
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           Cookie: cookie,
           "x-requested-with": "XMLHttpRequest",
-          Referer: "https://www.hifini.com/",
+          Referer: "https://www.hifiti.com/",
           "Sec-Ch-Ua":
             '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
           "Sec-Ch-Ua-Mobile": "?0",
